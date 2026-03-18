@@ -3,10 +3,11 @@ import { useRouter } from "expo-router";
 import { HeroBlock } from "@/src/components/layout/hero-block";
 import { ChipButton } from "@/src/components/ui/chip-button";
 import { Screen } from "@/src/components/ui/screen";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 export function FirstSyncScreen() {
   const router = useRouter();
+  const palette = useThemePalette();
 
   return (
     <Screen scroll keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screenBody}>
@@ -24,17 +25,17 @@ export function FirstSyncScreen() {
             body=""
             progress={
               <View style={styles.progressRail}>
-                <View style={[styles.progressStep, styles.progressStepActive]} />
-                <View style={[styles.progressStep, styles.progressStepActive]} />
-                <View style={[styles.progressStep, styles.progressStepActive]} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }, styles.progressStepActive, { backgroundColor: palette.accent }]} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }, styles.progressStepActive, { backgroundColor: palette.accent }]} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }, styles.progressStepActive, { backgroundColor: palette.accent }]} />
               </View>
             }
           />
 
           <View style={styles.statusBlock}>
-            <Text style={styles.statusLine}>Syncing messages</Text>
-            <Text style={styles.statusLine}>Finding what needs attention</Text>
-            <Text style={styles.statusLineMuted}>Preparing your dashboard</Text>
+            <Text style={[styles.statusLine, { color: palette.foreground }]}>Syncing messages</Text>
+            <Text style={[styles.statusLine, { color: palette.foreground }]}>Finding what needs attention</Text>
+            <Text style={[styles.statusLineMuted, { color: palette.muted }]}>Preparing your dashboard</Text>
 
             <View style={styles.ctaWrap}>
               <ChipButton onPress={() => router.push("/dashboard")}>Open dashboard</ChipButton>
@@ -74,10 +75,8 @@ const styles = StyleSheet.create({
     height: 6,
     flex: 1,
     borderRadius: 999,
-    backgroundColor: palette.surfaceStrong,
   },
   progressStepActive: {
-    backgroundColor: palette.accent,
   },
   bottomSpacer: {
     flex: 1,
@@ -89,12 +88,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   statusLine: {
-    color: palette.foreground,
     fontSize: 15,
     lineHeight: 23,
   },
   statusLineMuted: {
-    color: palette.muted,
     fontSize: 15,
     lineHeight: 23,
   },

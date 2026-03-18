@@ -1,14 +1,15 @@
 import type { PropsWithChildren } from "react";
 import { StyleSheet, Text } from "react-native";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 export function SectionLabel({ children }: PropsWithChildren) {
-  return <Text style={styles.label}>{children}</Text>;
+  const palette = useThemePalette();
+
+  return <Text style={[styles.label, { color: palette.muted }]}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
   label: {
-    color: palette.muted,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 2,

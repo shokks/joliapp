@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { Pressable, StyleSheet, Text, type PressableProps, type ViewStyle } from "react-native";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 type ChipButtonProps = PropsWithChildren<Omit<PressableProps, "style"> & {
   variant?: "primary" | "secondary" | "ghost";
@@ -9,19 +9,28 @@ type ChipButtonProps = PropsWithChildren<Omit<PressableProps, "style"> & {
 
 export function ChipButton({ children, variant = "primary", style, ...props }: ChipButtonProps) {
   const isPrimary = variant === "primary";
+  const palette = useThemePalette();
 
   return (
     <Pressable
       style={[
         styles.base,
-        isPrimary ? styles.primary : variant === "secondary" ? styles.secondary : styles.ghost,
+        isPrimary
+          ? [styles.primary, { backgroundColor: palette.accent }]
+          : variant === "secondary"
+            ? [styles.secondary, { backgroundColor: palette.surfaceStrong, borderColor: palette.border }]
+            : styles.ghost,
         style,
       ]}
       {...props}
     >
       <Text
         style={
-          isPrimary ? styles.primaryText : variant === "secondary" ? styles.secondaryText : styles.ghostText
+          isPrimary
+            ? [styles.primaryText, { color: palette.accentText }]
+            : variant === "secondary"
+              ? [styles.secondaryText, { color: palette.foreground }]
+              : [styles.ghostText, { color: palette.foreground }]
         }
       >
         {children}
@@ -39,11 +48,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   primary: {
-    backgroundColor: palette.accent,
   },
   secondary: {
-    backgroundColor: palette.surfaceStrong,
-    borderColor: palette.border,
     borderWidth: 1,
   },
   ghost: {
@@ -54,17 +60,14 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   primaryText: {
-    color: palette.accentText,
     fontSize: 14,
     fontWeight: "700",
   },
   secondaryText: {
-    color: palette.foreground,
     fontSize: 14,
     fontWeight: "600",
   },
   ghostText: {
-    color: palette.foreground,
     fontSize: 14,
     fontWeight: "600",
   },

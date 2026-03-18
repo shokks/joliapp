@@ -2,8 +2,9 @@ import { useRef } from "react";
 import { Animated, SectionList, Text, View, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { HeroBlock } from "@/src/components/layout/hero-block";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 type ActionRow   = { kind: "action";   n: string; title: string; source: string; when: string };
 type UpcomingRow = { kind: "upcoming"; date: string; event: string };
@@ -34,6 +35,7 @@ const TAKEN_CARE_OF: DoneRow[] = [
 
 export function DashboardScreen() {
   const router = useRouter();
+  const palette = useThemePalette();
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const heroOpacity = scrollY.interpolate({
@@ -54,7 +56,7 @@ export function DashboardScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: palette.background }]}>
       <SectionList
         sections={sections}
         keyExtractor={(_, index) => String(index)}
@@ -69,38 +71,43 @@ export function DashboardScreen() {
           <Animated.View style={{ opacity: heroOpacity, transform: [{ translateY: heroTranslate }] }}>
             <HeroBlock
               dayLabel="Monday, March 17"
-              title="Good morning, Sarah."
+              title="Hi Sophié!"
               subtitle={`${ALL_ACTIONS.length} things need attention.`}
               body=""
+              topAccessory={
+                <Pressable style={styles.settingsLink} onPress={() => router.push("/settings")}>
+                  <Ionicons name="settings-outline" size={20} color={palette.foreground} style={styles.settingsIcon} />
+                </Pressable>
+              }
             />
           </Animated.View>
         }
         renderSectionHeader={({ section }) => (
-          <View style={styles.stickyHeader}>
-            <Text style={styles.stickyLabel}>{section.title}</Text>
+          <View style={[styles.stickyHeader, { backgroundColor: palette.background, borderTopColor: palette.border }]}>
+            <Text style={[styles.stickyLabel, { color: palette.muted }]}>{section.title}</Text>
           </View>
         )}
         renderItem={({ item }) => {
           if (item.kind === "action") {
             return (
               <Pressable
-                style={[styles.row, styles.rowDivider]}
+                style={[styles.row, styles.rowDivider, { borderBottomColor: palette.border }]}
                 onPress={() => router.push("/item/preview")}
               >
-                <Text style={styles.itemNumber}>{item.n}</Text>
+                <Text style={[styles.itemNumber, { color: palette.accent }]}>{item.n}</Text>
                 <View style={styles.itemBody}>
                   <View style={styles.itemTop}>
-                    <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text style={styles.itemWhen}>{item.when}</Text>
+                    <Text style={[styles.itemTitle, { color: palette.foreground }]}>{item.title}</Text>
+                    <Text style={[styles.itemWhen, { color: palette.muted }]}>{item.when}</Text>
                   </View>
-                  <Text style={styles.itemSource}>{item.source}</Text>
+                  <Text style={[styles.itemSource, { color: palette.muted }]}>{item.source}</Text>
                   <View style={styles.itemActions}>
                     <Pressable onPress={() => {}}>
-                      <Text style={styles.actionDone}>Done</Text>
+                      <Text style={[styles.actionDone, { color: palette.accent }]}>Done</Text>
                     </Pressable>
-                    <Text style={styles.actionSep}>·</Text>
+                    <Text style={[styles.actionSep, { color: palette.muted }]}>·</Text>
                     <Pressable onPress={() => {}}>
-                      <Text style={styles.actionSnooze}>Snooze</Text>
+                      <Text style={[styles.actionSnooze, { color: palette.muted }]}>Snooze</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -110,19 +117,19 @@ export function DashboardScreen() {
 
           if (item.kind === "upcoming") {
             return (
-              <View style={[styles.row, styles.rowDivider, styles.upcomingRow]}>
-                <Text style={styles.upcomingDate}>{item.date}</Text>
-                <Text style={styles.upcomingEvent}>{item.event}</Text>
+              <View style={[styles.row, styles.rowDivider, styles.upcomingRow, { borderBottomColor: palette.border }]}>
+                <Text style={[styles.upcomingDate, { color: palette.muted }]}>{item.date}</Text>
+                <Text style={[styles.upcomingEvent, { color: palette.foreground }]}>{item.event}</Text>
               </View>
             );
           }
 
           return (
-            <View style={[styles.row, styles.rowDivider]}>
-              <Text style={styles.doneTitle}>{item.title}</Text>
+            <View style={[styles.row, styles.rowDivider, { borderBottomColor: palette.border }]}>
+              <Text style={[styles.doneTitle, { color: palette.muted }]}>{item.title}</Text>
               <View style={styles.doneMeta}>
-                <Text style={styles.doneSource}>{item.source}</Text>
-                <Text style={styles.doneWhen}>{item.when}</Text>
+                <Text style={[styles.doneSource, { color: palette.muted }]}>{item.source}</Text>
+                <Text style={[styles.doneWhen, { color: palette.muted }]}>{item.when}</Text>
               </View>
             </View>
           );
@@ -135,23 +142,29 @@ export function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: palette.background,
   },
   content: {
     paddingHorizontal: 20,
     paddingBottom: 48,
   },
+  settingsLink: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  settingsIcon: {
+    fontSize: 18,
+    opacity: 0.72,
+  },
 
   // Sticky section header
   stickyHeader: {
-    backgroundColor: palette.background,
     paddingTop: 32,
     paddingBottom: 10,
     borderTopWidth: 1,
-    borderTopColor: palette.border,
   },
   stickyLabel: {
-    color: palette.muted,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 2,
@@ -165,12 +178,11 @@ const styles = StyleSheet.create({
   },
   rowDivider: {
     borderBottomWidth: 1,
-    borderBottomColor: palette.border,
+    borderBottomColor: "transparent",
   },
 
   // Action items
   itemNumber: {
-    color: palette.accent,
     fontSize: 11,
     fontWeight: "500",
     opacity: 0.5,
@@ -188,18 +200,15 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   itemTitle: {
-    color: palette.foreground,
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
   },
   itemWhen: {
-    color: palette.muted,
     fontSize: 12,
     flexShrink: 0,
   },
   itemSource: {
-    color: palette.muted,
     fontSize: 12,
     lineHeight: 18,
     opacity: 0.7,
@@ -211,17 +220,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   actionDone: {
-    color: palette.accent,
     fontSize: 13,
     fontWeight: "600",
   },
   actionSep: {
-    color: palette.muted,
     fontSize: 13,
     opacity: 0.4,
   },
   actionSnooze: {
-    color: palette.muted,
     fontSize: 13,
   },
 
@@ -232,13 +238,11 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   upcomingDate: {
-    color: palette.muted,
     fontSize: 12,
     width: 76,
     opacity: 0.6,
   },
   upcomingEvent: {
-    color: palette.foreground,
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
@@ -247,7 +251,6 @@ const styles = StyleSheet.create({
 
   // Taken care of
   doneTitle: {
-    color: palette.muted,
     fontSize: 14,
     lineHeight: 20,
     textDecorationLine: "line-through",
@@ -259,12 +262,10 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   doneSource: {
-    color: palette.muted,
     fontSize: 12,
     opacity: 0.4,
   },
   doneWhen: {
-    color: palette.muted,
     fontSize: 12,
     opacity: 0.4,
   },
