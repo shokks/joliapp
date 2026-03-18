@@ -17,7 +17,7 @@ To guide an AI assistant in creating a detailed, step-by-step task list in Markd
 3.  **Receive Requirements:** The user provides a feature request, task description, or points to existing documentation
 4.  **Analyze Requirements:** The AI analyzes the functional requirements, user needs, and implementation scope from the provided information
 5. **Prioritize by Leverage:** Order tasks by impact. Ask: "What's the highest-value thing to build first?" Core user value comes before polish, edge cases, or nice-to-haves.
-6.  **Phase 1: Generate Parent Tasks:** Based on the requirements analysis, create the file and generate the main, high-level tasks required to implement the feature. **IMPORTANT: Always include task 0.0 "Create feature branch" as the first task, unless the user specifically requests not to create a branch.** Use your judgement on how many additional high-level tasks to use. It's likely to be about 5. Present these tasks to the user in the specified format (without sub-tasks yet). Inform the user: "I have generated the high-level tasks based on your requirements. Ready to generate the sub-tasks? Respond with 'Go' to proceed."
+6.  **Phase 1: Generate Parent Tasks:** Based on the requirements analysis, create the file and generate the main, high-level tasks required to implement the feature. **IMPORTANT: Always include task 0.0 "Create feature branch" as the first task, unless the user specifically requests not to create a branch. Also instruct that every parent task must be completed on its own separate branch before any merge back to `main` is considered.** Use your judgement on how many additional high-level tasks to use. It's likely to be about 5. Present these tasks to the user in the specified format (without sub-tasks yet). Inform the user: "I have generated the high-level tasks based on your requirements. Ready to generate the sub-tasks? Respond with 'Go' to proceed."
 5.  **Wait for Confirmation:** Pause and wait for the user to respond with "Go".
 6.  **Phase 2: Generate Sub-Tasks:** Once the user confirms, break down each parent task into smaller, actionable sub-tasks necessary to complete the parent task. Ensure sub-tasks logically follow from the parent task and cover the implementation details implied by the requirements. **Each parent task MUST include a verification sub-task** (see Verification Requirements below).
 7.  **Identify Relevant Files:** Based on the tasks and requirements, identify potential files that will need to be created or modified. List these under the `Relevant Files` section, including corresponding test files if applicable.
@@ -54,6 +54,8 @@ Update the file after completing each sub-task, not just after completing an ent
 
 After each sub-task completion, run the most relevant tests/validation for that sub-task (frontend/browser checks whenever applicable), then mark it completed.
 
+Before moving to the next sub-task, explicitly ask the user whether you should proceed.
+
 Do not proceed to the next parent task until the user confirms the current task works.
 
 ## Development Workflow Guidance
@@ -69,6 +71,7 @@ Every parent task should be developed on its **own dedicated feature branch**, n
 
 **Per-Task Branch Rule (Required):**
 - Create a new branch for each parent task (e.g., `1.0`, `2.0`, `3.0`), complete only that task's scope on that branch, and do not bundle multiple parent tasks in one branch.
+- Treat branch completion as gated work: do not finish the final step for that parent task, commit, or prepare a merge until the user confirms everything is working.
 
 **Why Branches Matter:**
 - Isolates work in progress from production code
@@ -123,8 +126,8 @@ For features with both UI and backend components, implement in this order:
 3. ✅ **Deploy preview (if applicable)** - Push to remote, trigger preview deployment (Vercel preview or staging)
 4. ✅ **Request user review** - Share evidence/preview and demo the completed parent task
 5. ✅ **User approves** - User confirms the parent task meets requirements and works
-6. ✅ **Commit task changes** - Create a commit containing only that parent task's work
-7. ✅ **Merge to main immediately** - Create pull request and merge this task branch to `main`
+6. ✅ **Commit task changes only after user confirmation** - Create a commit containing only that parent task's work once the user confirms everything is fine
+7. ✅ **Ask whether to merge back to main** - After the commit, explicitly ask the user whether they want this task branch merged to `main`
 8. ✅ **Delete task branch** - Clean up with `git branch -d feature/[name]`
 9. ✅ **Start next parent task on a new branch** - Repeat the same flow task-by-task
 
@@ -134,11 +137,11 @@ For features with both UI and backend components, implement in this order:
 - Re-deploy preview
 - Request review again (repeat steps 4-5)
 
-Do not move from one parent task to the next until user approval is received for the current parent task, and that task branch has been validated, committed, and merged to `main`.
+Do not move from one parent task to the next until user approval is received for the current parent task, the task branch has been validated, the final step has been completed, and you have asked whether it should be merged to `main`.
 
 ### Verification Requirements
 
-**Every parent task MUST end with a verification sub-task.** Never mark a task complete without proving it works.
+**Every parent task MUST end with a verification sub-task.** Never mark a task complete without proving it works in the relevant surface (frontend and/or backend).
 
 **Verification sub-task format:**
 ```
@@ -155,6 +158,7 @@ Do not move from one parent task to the next until user approval is received for
 - Can I demonstrate this works in the browser/console?
 - Would a staff engineer approve this?
 - Have I tested the happy path AND edge cases?
+- Have I verified the actual frontend or backend behavior instead of assuming it works?
 
 ### Time Estimates & Stuck Threshold
 
@@ -185,6 +189,7 @@ When breaking down tasks, follow this pattern:
 - **Task 0.0: Create feature branch** ← Always first
 - **Task 1.0+: Parent tasks** ← High-level chunks (one per major component or feature area)
   - **Sub-tasks 1.1, 1.2, etc.:** Specific actions (frontend, backend, testing, deployment)
+  - **After every sub-task:** Mark it complete immediately, report what was verified, and ask the user whether to continue
 
 **Example for a market list feature:**
 ```
@@ -247,6 +252,8 @@ This creates a self-improvement loop that compounds over time.
 The process explicitly requires a pause after generating parent tasks to get user confirmation ("Go") before proceeding to generate the detailed sub-tasks. This ensures the high-level plan aligns with user expectations before diving into details.
 
 During implementation, pause at the end of each parent task and wait for explicit user confirmation that it works before starting the next parent task.
+
+During implementation, also pause after each sub-task is completed, tick it off immediately, and ask the user whether to move forward before starting the next sub-task.
 
 ## Target Audience
 

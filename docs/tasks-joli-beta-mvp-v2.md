@@ -23,8 +23,10 @@
 - The highest-value path is: preserve existing frontend surfaces, add Firehose, prove raw Klapp access, then wire extraction and transition into the existing dashboard.
 - ParentBox should inform architecture and prompt evaluation, but not be copied one-to-one.
 - Unit tests should live next to the logic they validate when test infrastructure is added.
-- After each parent task, pause for user confirmation before moving on.
-- Keep every parent task on its own branch, but do not delete branches automatically if the user prefers to retain them.
+- Every parent task must stay on its own dedicated branch from start to finish.
+- After each sub-task, pause and ask the user whether to move forward before starting the next sub-task.
+- After each parent task, pause for user confirmation before committing or moving on.
+- Keep every parent task branch after merge unless the user explicitly asks to delete it.
 
 ## Instructions for Completing Tasks
 
@@ -32,9 +34,15 @@
 
 Update the file after completing each sub-task, not just after completing an entire parent task.
 
-After each sub-task completion, run the most relevant tests/validation for that sub-task, then mark it completed.
+After each sub-task completion, run the most relevant tests/validation for that sub-task, then mark it completed immediately.
 
-Do not proceed to the next parent task until the user confirms the current task works.
+Before starting the next sub-task, ask the user whether to move forward.
+
+Do not proceed to the next parent task until the user confirms the current parent task works.
+
+Do not commit a parent task branch until its final verification step has been completed and the user confirms everything is fine.
+
+After the user confirms a parent task works, ask whether they want that branch merged back to `main` before doing the merge.
 
 ## Development Workflow Guidance
 
@@ -45,7 +53,21 @@ Every parent task should be developed on its own dedicated feature branch, never
 - Required naming format: `feature/[parent-task-number]-[short-description]`
 - Create a new branch for every parent task, for example `feature/1-0-firehose-entry` and `feature/2-0-klapp-raw-sync`
 - Do not reuse a branch across multiple parent tasks
+- Complete the full sub-task sequence and verification for that parent task on the same branch before any commit/merge decision is made
 - After approval, merge the branch back to `main` and keep the local branch instead of deleting it unless the user explicitly asks otherwise
+
+### Task Execution Contract
+
+For every parent task in this file, follow this exact sequence:
+
+1. Create and stay on that parent task's dedicated branch
+2. Complete one sub-task
+3. Test or validate that sub-task immediately
+4. Tick that sub-task off immediately
+5. Ask the user whether to move to the next sub-task
+6. After the parent task's final verification step passes, ask the user to confirm the whole parent task works
+7. Only after user confirmation, finish the commit step for that branch
+8. Ask the user whether they want the branch merged back to `main`
 
 ### Frontend-First Development Approach
 
