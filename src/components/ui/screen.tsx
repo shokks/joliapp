@@ -2,7 +2,7 @@ import type { PropsWithChildren } from "react";
 import type { ScrollViewProps, StyleProp, ViewStyle } from "react-native";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 type ScreenProps = PropsWithChildren<{
   scroll?: boolean;
@@ -16,12 +16,14 @@ export function Screen({
   contentContainerStyle,
   keyboardShouldPersistTaps,
 }: ScreenProps) {
+  const palette = useThemePalette();
+
   if (!scroll) {
-    return <SafeAreaView style={styles.safeArea}>{children}</SafeAreaView>;
+    return <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.background }]}>{children}</SafeAreaView>;
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: palette.background }]}> 
       <ScrollView
         contentContainerStyle={[styles.content, contentContainerStyle]}
         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
@@ -35,7 +37,6 @@ export function Screen({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: palette.background,
   },
   content: {
     paddingHorizontal: 20,

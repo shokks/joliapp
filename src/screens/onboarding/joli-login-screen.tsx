@@ -3,10 +3,11 @@ import { useRouter } from "expo-router";
 import { HeroBlock } from "@/src/components/layout/hero-block";
 import { ChipButton } from "@/src/components/ui/chip-button";
 import { Screen } from "@/src/components/ui/screen";
-import { palette } from "@/src/lib/theme/palette";
+import { useThemePalette } from "@/src/lib/state/app-context";
 
 export function JoliLoginScreen() {
   const router = useRouter();
+  const palette = useThemePalette();
 
   return (
     <Screen scroll keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screenBody}>
@@ -24,9 +25,9 @@ export function JoliLoginScreen() {
             body=""
             progress={
               <View style={styles.progressRail}>
-                <View style={[styles.progressStep, styles.progressStepActive]} />
-                <View style={styles.progressStep} />
-                <View style={styles.progressStep} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }, styles.progressStepActive, { backgroundColor: palette.accent }]} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }]} />
+                <View style={[styles.progressStep, { backgroundColor: palette.surfaceStrong }]} />
               </View>
             }
           />
@@ -37,7 +38,7 @@ export function JoliLoginScreen() {
                 autoCapitalize="words"
                 placeholder="Your name"
                 placeholderTextColor={palette.muted}
-                style={styles.input}
+                style={[styles.input, { borderBottomColor: palette.border, color: palette.foreground }]}
               />
             </View>
 
@@ -47,7 +48,7 @@ export function JoliLoginScreen() {
                 keyboardType="email-address"
                 placeholder="you@example.com"
                 placeholderTextColor={palette.muted}
-                style={styles.input}
+                style={[styles.input, { borderBottomColor: palette.border, color: palette.foreground }]}
               />
             </View>
 
@@ -56,7 +57,7 @@ export function JoliLoginScreen() {
                 placeholder="Create a password"
                 placeholderTextColor={palette.muted}
                 secureTextEntry
-                style={styles.input}
+                style={[styles.input, { borderBottomColor: palette.border, color: palette.foreground }]}
               />
             </View>
             <View style={styles.actions}>
@@ -102,10 +103,8 @@ const styles = StyleSheet.create({
     height: 6,
     flex: 1,
     borderRadius: 999,
-    backgroundColor: palette.surfaceStrong,
   },
   progressStepActive: {
-    backgroundColor: palette.accent,
   },
   bottomSpacer: {
     flex: 1,
@@ -122,8 +121,6 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "transparent",
     borderBottomWidth: 1,
-    borderBottomColor: palette.border,
-    color: palette.foreground,
     fontSize: 16,
     lineHeight: 22,
     paddingHorizontal: 0,
