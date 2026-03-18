@@ -1,13 +1,13 @@
 import type { PropsWithChildren } from "react";
 import { StyleSheet, View } from "react-native";
-import { useThemePalette } from "@/src/lib/state/app-context";
+import { usePalette } from "@/src/lib/theme/theme-context";
 
 type SurfaceCardProps = PropsWithChildren<{
   grow?: boolean;
 }>;
 
 export function SurfaceCard({ children, grow = false }: SurfaceCardProps) {
-  const palette = useThemePalette();
+  const palette = usePalette();
 
   return (
     <View

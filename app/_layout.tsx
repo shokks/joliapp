@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { AppProvider, useAppContext } from "@/src/lib/state/app-context";
+import { AppProvider } from "@/src/lib/state/app-context";
+import { ThemeProvider, useTheme } from "@/src/lib/theme/theme-context";
 
 function AppShell() {
-  const { theme } = useAppContext();
+  const { theme } = useTheme();
 
   return (
     <>
@@ -16,7 +17,9 @@ function AppShell() {
 export default function RootLayout() {
   return (
     <AppProvider>
-      <AppShell />
+      <ThemeProvider>
+        <AppShell />
+      </ThemeProvider>
     </AppProvider>
   );
 }

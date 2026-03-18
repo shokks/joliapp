@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { Pressable, StyleSheet, Text, type PressableProps, type ViewStyle } from "react-native";
-import { useThemePalette } from "@/src/lib/state/app-context";
+import { usePalette } from "@/src/lib/theme/theme-context";
 
 type ChipButtonProps = PropsWithChildren<Omit<PressableProps, "style"> & {
   variant?: "primary" | "secondary" | "ghost";
@@ -9,7 +9,7 @@ type ChipButtonProps = PropsWithChildren<Omit<PressableProps, "style"> & {
 
 export function ChipButton({ children, variant = "primary", style, ...props }: ChipButtonProps) {
   const isPrimary = variant === "primary";
-  const palette = useThemePalette();
+  const palette = usePalette();
 
   return (
     <Pressable

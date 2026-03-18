@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
+    "start:devices": "node ./scripts/start-emulators.mjs",
+    "start:all": "npm run start:devices && expo start",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",

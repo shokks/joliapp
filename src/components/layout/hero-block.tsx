@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useThemePalette } from "@/src/lib/state/app-context";
+import { usePalette } from "@/src/lib/theme/theme-context";
 
 type HeroBlockProps = {
   dayLabel: string;
@@ -12,7 +12,7 @@ type HeroBlockProps = {
 };
 
 export function HeroBlock({ dayLabel, title, subtitle, body, progress, topAccessory }: HeroBlockProps) {
-  const palette = useThemePalette();
+  const palette = usePalette();
 
   return (
     <View style={styles.hero}>

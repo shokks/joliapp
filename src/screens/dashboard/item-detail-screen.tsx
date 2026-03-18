@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 import { HeroBlock } from "@/src/components/layout/hero-block";
 import { Screen } from "@/src/components/ui/screen";
 import { SectionLabel } from "@/src/components/ui/section-label";
-import { useThemePalette } from "@/src/lib/state/app-context";
+import { usePalette } from "@/src/lib/theme/theme-context";
 
 export function ItemDetailScreen() {
   const router = useRouter();
-  const palette = useThemePalette();
+  const palette = usePalette();
 
   return (
     <Screen>
