@@ -68,17 +68,17 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
 
 ## Tasks
 
-- [ ] 0.0 Create feature branch
+- [x] 0.0 Create feature branch
   - [x] 0.1 Create and checkout a new branch for task planning and the first implementation slice (e.g. `git checkout -b feature/0-setup-and-navigation`) (~30 min)
   - [x] 0.2 Confirm branch naming convention for all remaining parent tasks in this file before implementation starts (~30 min)
   - [x] 0.3 Verify: Branch workflow is documented and a feature branch can be created for each parent task without ambiguity (~30 min)
-- [ ] 1.0 Build the core app structure and navigation shell
-  - [ ] 1.1 Create the app folder structure for screens, components, lib, and types so the Expo project is ready for multi-screen development (~30 min)
-  - [ ] 1.2 Add app navigation with the minimum route structure for onboarding, dashboard, item detail, and settings placeholders (~1-2 hrs)
-  - [ ] 1.3 Move the current single-screen shell into reusable layout and screen components instead of one monolithic `App.tsx` (~1-2 hrs)
-  - [ ] 1.4 Create shared design primitives for section headers, cards, buttons, spacing, and typography that match the calm Joli visual direction (~1-2 hrs)
-  - [ ] 1.5 Add app-level state boundaries for auth/session, locale, and item data using the simplest viable pattern (~1-2 hrs)
-  - [ ] 1.6 Verify: The app can navigate between placeholder onboarding, dashboard, item detail, and settings screens on a device without crashes (~30 min)
+- [x] 1.0 Build the core app structure and navigation shell
+  - [x] 1.1 Create the app folder structure for screens, components, lib, and types so the Expo project is ready for multi-screen development (~30 min)
+  - [x] 1.2 Add app navigation with the minimum route structure for onboarding, dashboard, item detail, and settings placeholders (~1-2 hrs)
+  - [x] 1.3 Move the current single-screen shell into reusable layout and screen components instead of one monolithic `App.tsx` (~1-2 hrs)
+  - [x] 1.4 Create shared design primitives for section headers, cards, buttons, spacing, and typography that match the calm Joli visual direction (~1-2 hrs)
+  - [x] 1.5 Add app-level state boundaries for auth/session, locale, and item data using the simplest viable pattern (~1-2 hrs)
+  - [x] 1.6 Verify: The app can navigate between placeholder onboarding, dashboard, item detail, and settings screens on a device without crashes (~30 min)
 - [ ] 2.0 Implement onboarding, locale selection defaults, and Klapp connect flow
   - [ ] 2.1 Build email sign-up UI states for beta onboarding, including loading and simple error messaging (~1-2 hrs)
   - [ ] 2.2 Detect the device locale on first launch and default the app language to English or German, with a settings override placeholder (~1 hr)
