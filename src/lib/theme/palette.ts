@@ -1,13 +1,13 @@
 export const palette = {
-  background: "#f8f3eb",
-  surface: "#efe7db",
-  surfaceStrong: "#e5dac8",
-  foreground: "#241c16",
-  muted: "#70655b",
-  accent: "#3f7a5d",
-  accentText: "#f8f3eb",
-  border: "#ded2bf",
-  warning: "#a95c42",
+  background: "#f7f1e7",
+  surface: "#f3e8d8",
+  surfaceStrong: "#ead8bf",
+  foreground: "#23180f",
+  muted: "#756658",
+  accent: "#2f7a62",
+  accentText: "#fff7ef",
+  border: "#dcc7aa",
+  warning: "#ab6547",
 };
 
 export type Palette = typeof palette;
