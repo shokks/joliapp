@@ -3,13 +3,23 @@ import { usePalette } from "@/src/lib/theme/theme-context";
 
 type DashboardSectionHeaderProps = {
   title: string;
+  showTopBorder?: boolean;
 };
 
-export function DashboardSectionHeader({ title }: DashboardSectionHeaderProps) {
+export function DashboardSectionHeader({ title, showTopBorder = true }: DashboardSectionHeaderProps) {
   const palette = usePalette();
 
   return (
-    <View style={[styles.stickyHeader, { backgroundColor: palette.background, borderTopColor: palette.border }]}>
+    <View
+      style={[
+        styles.stickyHeader,
+        {
+          backgroundColor: palette.background,
+          borderTopColor: palette.border,
+          borderTopWidth: showTopBorder ? 1 : 0,
+        },
+      ]}
+    >
       <Text style={[styles.stickyLabel, { color: palette.muted }]}>{title}</Text>
     </View>
   );
@@ -19,7 +29,6 @@ const styles = StyleSheet.create({
   stickyHeader: {
     paddingTop: 32,
     paddingBottom: 10,
-    borderTopWidth: 1,
   },
   stickyLabel: {
     fontSize: 12,

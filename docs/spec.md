@@ -30,9 +30,9 @@ Working parents carry a second full-time job in their heads — school forms, pe
 4. LLM extracts zero or more items (action or fyi) from the message
 5. Action items appear under "Needs your attention", FYI items under "Coming up"
 6. Parent receives a native push notification for new action items only
-7. Parent opens app, sees task card, taps for detail
-8. Detail view shows full Klapp message with the extracted sentence highlighted
-9. Parent marks action item done / snoozes it
+7. Parent opens app, sees task card, and either acts from the dashboard or taps for detail
+8. Detail view shows full Klapp message with the extracted sentence highlighted when more context is needed
+9. Parent marks action item done / snoozes it from the dashboard or detail view
 10. Done items move to "Taken care of"
 ```
 
@@ -179,16 +179,17 @@ When a message contains an RSVP deadline AND an event date, extract both:
 [Due label]
 Item title
 Source: Sender name · Date
+[optional quick actions for action items]
 ```
 
-Tap → Item Detail.
+Tap card → Item Detail.
 
 ### 7.3 Item Detail
 
 - Full item title + date
 - Full Klapp message body with extracted sentence(s) highlighted inline
 - Editable due date (tap to edit — action items only)
-- Actions: Mark done · Snooze (1 day / 3 days / 1 week) — action items only
+- Actions: Mark done · Snooze (1 day / 3 days / 1 week) — action items only, available from detail and optionally surfaced as quick actions on dashboard cards in beta
 
 ### 7.4 Empty States
 

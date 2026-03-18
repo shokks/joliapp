@@ -53,6 +53,17 @@ type TranslationTree = {
     errorTitle: string;
     errorBody: string;
   };
+  dashboard: {
+    dayLabel: string;
+    greeting: string;
+    attentionCount: string;
+    attentionClear: string;
+    attentionSection: string;
+    upcomingSection: string;
+    doneSection: string;
+    allClearTitle: string;
+    allClearBody: string;
+  };
   settings: {
     title: string;
     subtitle: string;
@@ -65,6 +76,7 @@ type TranslationTree = {
     active: string;
     reconnectRequired: string;
     reconnectDescription: string;
+    disconnect: string;
     appearance: string;
     language: string;
     automatic: string;
@@ -73,6 +85,29 @@ type TranslationTree = {
     connectionState: string;
     futurePreferences: string;
     futurePreferencesBody: string;
+    comingSoon: string;
+    themeSystem: string;
+    themeLight: string;
+    themeDark: string;
+    languageHelper: string;
+    languageAutomatic: string;
+  };
+  itemDetail: {
+    noDate: string;
+    dueDate: string;
+    eventDate: string;
+    changeDueDate: string;
+    originalMessage: string;
+    actions: string;
+    markDone: string;
+    snooze: string;
+    tomorrow: string;
+    in3Days: string;
+    nextWeek: string;
+    snooze1Day: string;
+    snooze3Days: string;
+    snooze1Week: string;
+    viaKlapp: string;
   };
 };
 
@@ -130,6 +165,17 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       errorTitle: "First sync needs another try.",
       errorBody: "We couldn't finish syncing messages this time.",
     },
+    dashboard: {
+      dayLabel: "Monday, March 17",
+      greeting: "Hi Sophié!",
+      attentionCount: "things need attention.",
+      attentionClear: "All clear today.",
+      attentionSection: "Needs your attention",
+      upcomingSection: "Coming up",
+      doneSection: "Taken care of",
+      allClearTitle: "Nothing urgent.",
+      allClearBody: "You're all caught up for now.",
+    },
     settings: {
       title: "Settings",
       subtitle: "Your Joli setup.",
@@ -142,6 +188,7 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       active: "Active",
       reconnectRequired: "Reconnect required",
       reconnectDescription: "Open onboarding to reconnect your Klapp account.",
+      disconnect: "Disconnect",
       appearance: "Appearance",
       language: "Language",
       automatic: "Automatic",
@@ -150,6 +197,29 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       connectionState: "Connection state",
       futurePreferences: "Beta preferences",
       futurePreferencesBody: "Notification timing and extra controls will land here later.",
+      comingSoon: "Soon",
+      themeSystem: "System",
+      themeLight: "Light",
+      themeDark: "Dark",
+      languageHelper: "Choose how Joli should read and write the app.",
+      languageAutomatic: "Automatic from device",
+    },
+    itemDetail: {
+      noDate: "No date",
+      dueDate: "Due date",
+      eventDate: "Event date",
+      changeDueDate: "Change due date",
+      originalMessage: "From the original message",
+      actions: "Actions",
+      markDone: "Mark done",
+      snooze: "Snooze",
+      tomorrow: "Tomorrow",
+      in3Days: "In 3 days",
+      nextWeek: "Next week",
+      snooze1Day: "Snooze 1 day",
+      snooze3Days: "3 days",
+      snooze1Week: "1 week",
+      viaKlapp: "via Klapp",
     },
   },
   de: {
@@ -205,6 +275,17 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       errorTitle: "Der erste Sync braucht einen neuen Versuch.",
       errorBody: "Dieses Mal konnten wir die Nachrichten nicht vollständig synchronisieren.",
     },
+    dashboard: {
+      dayLabel: "Montag, 17. März",
+      greeting: "Hallo Sophié!",
+      attentionCount: "Dinge sind wichtig.",
+      attentionClear: "Heute ist alles ruhig.",
+      attentionSection: "Wichtig für dich",
+      upcomingSection: "Demnächst",
+      doneSection: "Erledigt",
+      allClearTitle: "Nichts Dringendes.",
+      allClearBody: "Im Moment ist alles erledigt.",
+    },
     settings: {
       title: "Einstellungen",
       subtitle: "Dein Joli-Setup.",
@@ -217,6 +298,7 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       active: "Aktiv",
       reconnectRequired: "Erneut verbinden",
       reconnectDescription: "Öffne das Onboarding, um dein Klapp-Konto neu zu verbinden.",
+      disconnect: "Trennen",
       appearance: "Darstellung",
       language: "Sprache",
       automatic: "Automatisch",
@@ -225,6 +307,29 @@ export const translations: Record<SupportedLocale, TranslationTree> = {
       connectionState: "Verbindungsstatus",
       futurePreferences: "Beta-Präferenzen",
       futurePreferencesBody: "Benachrichtigungszeiten und weitere Einstellungen kommen später hierhin.",
+      comingSoon: "Bald",
+      themeSystem: "System",
+      themeLight: "Hell",
+      themeDark: "Dunkel",
+      languageHelper: "Lege fest, in welcher Sprache Joli die App anzeigt.",
+      languageAutomatic: "Automatisch vom Gerät",
+    },
+    itemDetail: {
+      noDate: "Kein Datum",
+      dueDate: "Fällig am",
+      eventDate: "Termin",
+      changeDueDate: "Datum anpassen",
+      originalMessage: "Aus der Originalnachricht",
+      actions: "Aktionen",
+      markDone: "Als erledigt markieren",
+      snooze: "Zurückstellen",
+      tomorrow: "Morgen",
+      in3Days: "In 3 Tagen",
+      nextWeek: "Nächste Woche",
+      snooze1Day: "Für 1 Tag",
+      snooze3Days: "Für 3 Tage",
+      snooze1Week: "Für 1 Woche",
+      viaKlapp: "via Klapp",
     },
   },
 };

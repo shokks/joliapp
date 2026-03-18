@@ -1,32 +1,32 @@
 import { Pressable, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { HeroBlock } from "@/src/components/layout/hero-block";
+import { AppIcon } from "@/src/components/ui/app-icon";
 import { AppearanceToggle } from "@/src/screens/settings/components/appearance-toggle";
+import { LanguageSelector } from "@/src/screens/settings/components/language-selector";
 import { SettingsRow } from "@/src/screens/settings/components/settings-row";
 import { SettingsSection } from "@/src/screens/settings/components/settings-section";
 import { useAppContext } from "@/src/lib/state/app-context";
-import { usePalette, useTheme } from "@/src/lib/theme/theme-context";
+import { usePalette } from "@/src/lib/theme/theme-context";
 
 export function SettingsScreen() {
   const router = useRouter();
   const palette = usePalette();
-  const { theme } = useTheme();
-  const { klappConnectionStatus, locale, localeSource, sessionProfile, translation } = useAppContext();
+  const { disconnectKlapp, klappConnectionStatus, klappEmail, sessionProfile, translation } = useAppContext();
 
+  const isKlappConnected = klappConnectionStatus === "connected" || klappConnectionStatus === "syncing";
+  const klappTitle = klappEmail ? `${translation.settings.klapp} (${klappEmail})` : translation.settings.klapp;
   const connectionMeta = klappConnectionStatus === "reconnect_required"
     ? translation.settings.reconnectRequired
-    : translation.settings.active;
+    : isKlappConnected
+      ? translation.settings.active
+      : undefined;
   const connectionDescription = klappConnectionStatus === "reconnect_required"
     ? translation.settings.reconnectDescription
-    : translation.settings.connected;
-  const languageDescription = localeSource === "device"
-    ? translation.settings.automatic
-    : locale === "de"
-      ? translation.settings.german
-      : translation.settings.english;
-  const languageMeta = locale === "de" ? translation.settings.german : translation.settings.english;
+    : isKlappConnected
+      ? translation.settings.connected
+      : "";
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: palette.background }]}> 
@@ -38,42 +38,43 @@ export function SettingsScreen() {
           body=""
           topAccessory={
             <Pressable style={styles.closeLink} onPress={() => router.back()}>
-              <Ionicons name="close" size={20} color={palette.foreground} style={styles.closeIcon} />
+              <AppIcon name="x" size={18} color={palette.foreground} />
             </Pressable>
           }
         />
 
         <SettingsSection title={translation.settings.account}>
           <SettingsRow
-            title={translation.settings.joliAccount}
-            description={sessionProfile?.email ?? "sarah@example.com"}
-            meta={translation.settings.beta}
+            title={sessionProfile?.email ?? "sarah@example.com"}
+            description=""
           />
         </SettingsSection>
 
         <SettingsSection title={translation.settings.klapp}>
-          <SettingsRow title={translation.settings.klapp} description={connectionDescription} meta={connectionMeta} />
+          <SettingsRow
+            title={klappTitle}
+            description={connectionDescription}
+            meta={connectionMeta}
+            trailing={
+              isKlappConnected ? (
+                <Pressable onPress={disconnectKlapp} hitSlop={8}>
+                  <AppIcon name="log-out" size={16} color={palette.warning} />
+                </Pressable>
+              ) : undefined
+            }
+          />
         </SettingsSection>
 
         <SettingsSection title={translation.settings.preferences}>
           <SettingsRow
             title={translation.settings.appearance}
-            description={theme === "light" ? "Light" : "Dark"}
+            description=""
             trailing={<AppearanceToggle />}
           />
           <SettingsRow
             title={translation.settings.language}
-            description={languageDescription}
-            meta={languageMeta}
-          />
-          <SettingsRow
-            title={translation.settings.connectionState}
-            description={connectionDescription}
-            meta={connectionMeta}
-          />
-          <SettingsRow
-            title={translation.settings.futurePreferences}
-            description={translation.settings.futurePreferencesBody}
+            description=""
+            trailing={<LanguageSelector />}
           />
         </SettingsSection>
       </ScrollView>
@@ -94,9 +95,5 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     justifyContent: "center",
-  },
-  closeIcon: {
-    fontSize: 18,
-    opacity: 0.72,
   },
 });
