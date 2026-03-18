@@ -86,6 +86,21 @@ Web (Next.js) handles the landing page, waitlist, and dashboard mockup. The real
 
 **Why:** The warmer, more orangish palette in the Expo app made the dashboard feel softer and more decorative than intended. For beta, Joli should feel calm, clear, and efficient. A whiter paper background improves readability, the brighter sage gives action states more clarity, and tighter radii reduce the generic “bubbly UI kit” effect.
 
+**Updated:** 2026-03-18
+**Decision:** Distinguish the `Coming up` section from `Needs your attention` with a lighter editorial date-rail treatment and an optional quiet child avatar on the far edge when child context is available.
+
+**Why:** `Coming up` is secondary to action items and should feel more like a calm glance surface than a task list. A date-first layout reinforces chronology, while a subtle initial avatar gives parents child context without bloating titles or increasing visual noise. This keeps the hierarchy clear: action rows stay primary, upcoming items stay lighter and easier to scan.
+
+**Updated:** 2026-03-18
+**Decision:** Use a subtle child-name badge in `Coming up` instead of an initial avatar when child context is shown.
+
+**Why:** A child initial was too ambiguous at a glance and added a small decoding step. A quiet name badge keeps the secondary hierarchy intact while making the context immediately useful to parents.
+
+**Updated:** 2026-03-18
+**Decision:** In item detail, show the actual item date as the only primary date reference; keep message-source timing secondary in the evidence metadata, and reveal due-date edit presets from the date row itself.
+
+**Why:** The detail page is the trust surface. Repeating dates in the header and source metadata made it harder to tell which date mattered. Parents need one clear answer to "when does this matter?" The source/message date still matters as provenance, but it should sit lower in the hierarchy. Keeping due-date edit tied directly to the date row also makes the edit affordance easier to understand.
+
 ---
 
 ## Beta Notification Stack

@@ -1,33 +1,35 @@
 import { useMemo, useRef } from "react";
-import { Animated, SectionList, StyleSheet, Text, View } from "react-native";
+import { Animated, SectionList, StyleSheet, Text, View, type SectionListData } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAppContext } from "@/src/lib/state/app-context";
 import { usePalette } from "@/src/lib/theme/theme-context";
-import {
-  mockActionItems,
-  mockDoneItems,
-  mockItems,
-  mockUpcomingItems,
-  type MockItem,
-} from "@/src/screens/dashboard/dashboard-data";
+import type { MockItem } from "@/src/screens/dashboard/dashboard-data";
 import { DashboardHero } from "@/src/screens/dashboard/components/dashboard-hero";
 import { DashboardRowView } from "@/src/screens/dashboard/components/dashboard-row";
 import { DashboardSectionHeader } from "@/src/screens/dashboard/components/dashboard-section-header";
 
+type DashboardSectionItem = MockItem | { id: string; kind: "attention-empty" };
+
 export function DashboardScreen() {
   const palette = usePalette();
+  const { dashboardItems, translation } = useAppContext();
   const scrollY = useRef(new Animated.Value(0)).current;
   const today = "2026-03-18";
   const comingUpWindowInDays = 14;
   const takenCareOfLimit = 10;
 
   const sortedActionItems = useMemo(
-    () => [...mockActionItems].sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
-    [],
+    () =>
+      dashboardItems
+        .filter((item) => item.type === "action" && item.status === "open")
+        .sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
+    [dashboardItems],
   );
 
   const upcomingItemsWithinWindow = useMemo(
     () =>
-      [...mockUpcomingItems]
+      dashboardItems
+        .filter((item) => item.type === "fyi" && item.status === "open")
         .filter((item) => {
           if (!item.date) {
             return false;
@@ -40,27 +42,32 @@ export function DashboardScreen() {
           return dayOffset >= 0 && dayOffset <= comingUpWindowInDays;
         })
         .sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
-    [today],
+    [dashboardItems, today],
   );
 
   const recentDoneItems = useMemo(
     () =>
-      [...mockDoneItems]
+      dashboardItems
+        .filter((item) => item.status === "done")
         .sort((left, right) => (right.date ?? "").localeCompare(left.date ?? ""))
         .slice(0, takenCareOfLimit),
-    [],
+    [dashboardItems],
   );
 
   const dashboardSections = useMemo(
     () => [
-      { key: "attention", title: "Needs your attention", data: sortedActionItems },
+      {
+        key: "attention",
+        title: translation.dashboard.attentionSection,
+        data: sortedActionItems.length > 0 ? sortedActionItems : [{ id: "attention-empty", kind: "attention-empty" as const }],
+      },
       ...(upcomingItemsWithinWindow.length > 0
-        ? [{ key: "upcoming", title: "Coming up", data: upcomingItemsWithinWindow }]
+        ? [{ key: "upcoming", title: translation.dashboard.upcomingSection, data: upcomingItemsWithinWindow }]
         : []),
-      { key: "done", title: "Taken care of", data: recentDoneItems },
+      { key: "done", title: translation.dashboard.doneSection, data: recentDoneItems },
     ],
-    [recentDoneItems, sortedActionItems, upcomingItemsWithinWindow],
-  ) satisfies Array<{ key: string; title: string; data: readonly MockItem[] }>;
+    [recentDoneItems, sortedActionItems, translation.dashboard.attentionSection, translation.dashboard.doneSection, translation.dashboard.upcomingSection, upcomingItemsWithinWindow],
+  ) satisfies Array<SectionListData<DashboardSectionItem, { key: string; title: string }>>;
 
   const heroOpacity = scrollY.interpolate({
     inputRange: [0, 90],
@@ -75,7 +82,7 @@ export function DashboardScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: palette.background }]}> 
-      <SectionList
+      <SectionList<DashboardSectionItem, { key: string; title: string }>
         sections={dashboardSections}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled
@@ -87,24 +94,22 @@ export function DashboardScreen() {
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <Animated.View style={{ opacity: heroOpacity, transform: [{ translateY: heroTranslate }] }}>
-            <DashboardHero actionCount={mockItems.filter((item) => item.type === "action" && item.status !== "done").length} />
+            <DashboardHero actionCount={sortedActionItems.length} />
           </Animated.View>
         }
-        renderSectionHeader={({ section }) => <DashboardSectionHeader title={section.title} />}
-        renderItem={({ item, section }) => {
-          if (section.key === "attention" && section.data.length === 0) {
-            return null;
+        renderSectionHeader={({ section }) => <DashboardSectionHeader title={section.title} showTopBorder={section.key !== "attention"} />}
+        renderItem={({ item }: { item: DashboardSectionItem }) => {
+          if ("kind" in item && item.kind === "attention-empty") {
+            return (
+              <View style={styles.inlineEmptyState}>
+                <Text style={[styles.emptyTitle, { color: palette.foreground }]}>{translation.dashboard.allClearTitle}</Text>
+                <Text style={[styles.emptyBody, { color: palette.muted }]}>{translation.dashboard.allClearBody}</Text>
+              </View>
+            );
           }
 
-          return <DashboardRowView item={item} />;
+          return <DashboardRowView item={item as MockItem} />;
         }}
-        ListEmptyComponent={
-          <View style={styles.emptyState}> 
-            <Text style={[styles.emptyTitle, { color: palette.foreground }]}>Nothing needs your attention right now.</Text>
-            <Text style={[styles.emptyBody, { color: palette.muted }]}>New action items will appear here when Joli finds something you need to handle.</Text>
-          </View>
-        }
-        SectionSeparatorComponent={() => <View style={styles.sectionGap} />}
       />
     </SafeAreaView>
   );
@@ -118,21 +123,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 52,
   },
-  emptyState: {
-    marginTop: 14,
-    paddingVertical: 8,
+  inlineEmptyState: {
+    minHeight: 144,
+    justifyContent: "center",
+    paddingVertical: 20,
     gap: 6,
   },
   emptyTitle: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 18,
+    lineHeight: 24,
     fontWeight: "600",
   },
   emptyBody: {
     fontSize: 14,
     lineHeight: 20,
-  },
-  sectionGap: {
-    height: 10,
   },
 });

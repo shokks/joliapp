@@ -6,6 +6,7 @@ export type MockItem = {
   type: MockItemType;
   status: MockItemStatus;
   title: string;
+  childName?: string | null;
   date: string | null;
   dueLabel: string;
   source: string;
@@ -22,6 +23,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "open",
     title: "Sign permission slip — Science Museum trip",
+    childName: "Luca",
     date: "2026-03-18",
     dueLabel: "Due today",
     source: "Lincoln Elementary · Mar 17",
@@ -37,6 +39,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "open",
     title: "RSVP for Maya's birthday party",
+    childName: "Maya",
     date: "2026-03-21",
     dueLabel: "Due Friday",
     source: "Sarah Johnson · Mar 16",
@@ -52,6 +55,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "open",
     title: "Confirm appointment — Dr. Patel, checkup",
+    childName: "Luca",
     date: "2026-03-22",
     dueLabel: "Due this week",
     source: "PedsHealth Portal · Mar 15",
@@ -67,6 +71,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "snoozed",
     title: "Return library books — Olivia",
+    childName: "Olivia",
     date: "2026-03-20",
     dueLabel: "Snoozed until tomorrow",
     source: "Lincoln Elementary · Mar 14",
@@ -81,7 +86,8 @@ export const mockItems: MockItem[] = [
     id: "fyi-maths-test",
     type: "fyi",
     status: "open",
-    title: "Maths test — Olivia",
+    title: "Maths test",
+    childName: "Olivia",
     date: "2026-03-19",
     dueLabel: "Wed, Mar 19",
     source: "Lincoln Elementary · Mar 17",
@@ -96,7 +102,8 @@ export const mockItems: MockItem[] = [
     id: "fyi-science-trip",
     type: "fyi",
     status: "open",
-    title: "Science Museum trip — Luca's class",
+    title: "Science Museum trip",
+    childName: "Luca",
     date: "2026-03-20",
     dueLabel: "Thu, Mar 20",
     source: "Lincoln Elementary · Mar 17",
@@ -111,7 +118,8 @@ export const mockItems: MockItem[] = [
     id: "fyi-book-fair",
     type: "fyi",
     status: "open",
-    title: "Book fair ends — Lincoln Elementary",
+    title: "Book fair ends",
+    childName: "Olivia",
     date: "2026-03-20",
     dueLabel: "Thu, Mar 20",
     source: "Lincoln Elementary · Mar 12",
@@ -127,6 +135,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "done",
     title: "Sign permission slip — Art Museum visit",
+    childName: "Luca",
     date: "2026-03-14",
     dueLabel: "Done yesterday",
     source: "Lincoln Elementary · Mar 14",
@@ -142,6 +151,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "done",
     title: "RSVP for Luca's football tournament",
+    childName: "Luca",
     date: "2026-03-13",
     dueLabel: "Done 2 days ago",
     source: "FC Tigers · Mar 13",
@@ -157,6 +167,7 @@ export const mockItems: MockItem[] = [
     type: "action",
     status: "done",
     title: "Top up school lunch account",
+    childName: "Olivia",
     date: "2026-03-10",
     dueLabel: "Done last week",
     source: "Lincoln Elementary · Mar 10",

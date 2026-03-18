@@ -47,6 +47,7 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 19. The system must always store and display `evidenceSnippet` in original German.
 20. The dashboard must show `action` items with `status: open` under `Needs your attention`, ordered by earliest date first and undated items last.
 21. The dashboard must show `fyi` items dated within the next 14 days under `Coming up`, ordered by date.
+21a. The `Coming up` section may use a lighter date-first visual treatment distinct from action rows and may show an optional quiet child-name badge when child context is available.
 22. The dashboard must show completed `action` items under `Taken care of`, most recent first, capped at 10 items.
 23. The dashboard must hide `Coming up` when there are no qualifying FYI items.
 24. The dashboard must hide `Taken care of` when there are no completed action items.
@@ -89,7 +90,9 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 - The product surface must feel calm, focused, and action-first rather than inbox-like.
 - The dashboard must keep the three-section hierarchy from the spec: `Needs your attention`, `Coming up`, `Taken care of`.
 - The dashboard card should stay lightweight, with evidence shown on tap in detail rather than directly on the card, even if inline quick actions are present.
+- `Coming up` should feel lighter and more glanceable than `Needs your attention`; if child context is shown there, prefer a subtle child-name badge over adding extra title text.
 - The item detail view remains the trust surface: it should make the extracted evidence easy to verify when the parent wants more context before acting.
+- The item detail view should present one clear primary date for the item itself, with source-message timing kept secondary as provenance.
 - Onboarding should feel short and direct: sign up, connect Klapp, wait for first sync, land on the dashboard.
 
 ## Technical Considerations

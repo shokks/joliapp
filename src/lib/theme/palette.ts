@@ -25,9 +25,9 @@ export const darkPalette = {
 export const palette = lightPalette;
 
 export type Palette = typeof palette;
-export type ThemeMode = "light" | "dark";
+export type ThemeMode = "system" | "light" | "dark";
 
-export const palettes: Record<ThemeMode, Palette> = {
+export const palettes: Record<Exclude<ThemeMode, "system">, Palette> = {
   light: lightPalette,
   dark: darkPalette,
 };
