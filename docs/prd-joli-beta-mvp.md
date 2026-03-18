@@ -20,8 +20,8 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 - As a working parent, I want to connect Klapp once so I do not need to manually check every school message.
 - As a working parent, I want Joli to show me only what needs action so I can focus on today’s important tasks.
 - As a working parent, I want to see upcoming school and family events without opening a calendar or inbox.
-- As a working parent, I want to inspect the exact source message and highlighted evidence so I can trust what Joli extracted.
-- As a working parent, I want to mark something done or snooze it so the dashboard stays current.
+- As a working parent, I want to inspect the exact source message and highlighted evidence so I can trust what Joli extracted when I need more context.
+- As a working parent, I want to mark something done or snooze it quickly from the dashboard, while still being able to open detail when I want to verify the source.
 - As a working parent, I want timely push reminders before deadlines so important family admin does not slip.
 
 ## Functional Requirements
@@ -52,22 +52,23 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 24. The dashboard must hide `Taken care of` when there are no completed action items.
 25. The dashboard must show the empty-state message “Nothing needs your attention right now.” when there are no open action items.
 26. Each item card on the dashboard must show a due label, item title, and source line.
-27. Tapping an item card must open an item detail view.
-28. The item detail view must show the full item title and date.
-29. The item detail view must show the full Klapp message body with extracted sentence(s) highlighted inline.
-30. The item detail view must allow due date editing for action items only.
-31. The item detail view must allow the parent to mark an action item as done.
-32. The item detail view must allow the parent to snooze an action item for 1 day, 3 days, or 1 week.
-33. Marking an action item done must move it to `Taken care of`.
-34. Snoozing an action item must set `status` to `snoozed`, set `snoozedUntil`, and remove it from active notification eligibility until snooze expiry.
-35. The system must send native push notifications for each new action item.
-36. The system must send additional push notifications 48 hours, 24 hours, and 12 hours before an action item deadline, if the item is still eligible.
-37. The system must never notify for FYI items.
-38. The system must never notify for action items that are done or snoozed.
-39. The system must deduplicate push notifications using an idempotency key per item and notification window.
-40. Push notifications must deep link directly to the relevant item detail view.
-41. If Klapp returns `401`, the system must flag the account as disconnected and notify the parent to reconnect.
-42. The app must support beta distribution via TestFlight on iOS and EAS Internal Distribution on Android.
+27. Action item cards on the dashboard may expose inline quick actions for mark done and snooze in beta.
+28. Tapping an item card must open an item detail view.
+29. The item detail view must show the full item title and date.
+30. The item detail view must show the full Klapp message body with extracted sentence(s) highlighted inline.
+31. The item detail view must allow due date editing for action items only.
+32. The item detail view must allow the parent to mark an action item as done.
+33. The item detail view must allow the parent to snooze an action item for 1 day, 3 days, or 1 week.
+34. Marking an action item done from either dashboard or detail must move it to `Taken care of`.
+35. Snoozing an action item from either dashboard or detail must set `status` to `snoozed`, set `snoozedUntil`, and remove it from active notification eligibility until snooze expiry.
+36. The system must send native push notifications for each new action item.
+37. The system must send additional push notifications 48 hours, 24 hours, and 12 hours before an action item deadline, if the item is still eligible.
+38. The system must never notify for FYI items.
+39. The system must never notify for action items that are done or snoozed.
+40. The system must deduplicate push notifications using an idempotency key per item and notification window.
+41. Push notifications must deep link directly to the relevant item detail view.
+42. If Klapp returns `401`, the system must flag the account as disconnected and notify the parent to reconnect.
+43. The app must support beta distribution via TestFlight on iOS and EAS Internal Distribution on Android.
 
 ## Non-Goals (Out of Scope)
 
@@ -87,8 +88,8 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 
 - The product surface must feel calm, focused, and action-first rather than inbox-like.
 - The dashboard must keep the three-section hierarchy from the spec: `Needs your attention`, `Coming up`, `Taken care of`.
-- The dashboard card should stay lightweight, with evidence shown on tap in detail rather than directly on the card.
-- The item detail view is the trust surface: it should make the extracted evidence easy to verify.
+- The dashboard card should stay lightweight, with evidence shown on tap in detail rather than directly on the card, even if inline quick actions are present.
+- The item detail view remains the trust surface: it should make the extracted evidence easy to verify when the parent wants more context before acting.
 - Onboarding should feel short and direct: sign up, connect Klapp, wait for first sync, land on the dashboard.
 
 ## Technical Considerations

@@ -76,6 +76,16 @@ Web (Next.js) handles the landing page, waitlist, and dashboard mockup. The real
 
 **Why:** Respects two things simultaneously — time-poor parents don't want to read emails to act, but trust-sensitive parents need full context available if something feels off. The tap-to-detail pattern is the feedback loop for when Joli gets something wrong: parent taps, reads the email, corrects it. Clean on the surface, full context on demand.
 
+**Updated:** 2026-03-18
+**Decision:** Allow inline quick actions for action items on the dashboard in beta while keeping the detail view as the trust surface.
+
+**Why:** Beta users already get a filtered list of high-confidence action items. Requiring every completion or snooze to route through detail adds friction at the exact moment Joli should save time. The dashboard still shows only lightweight task data, and tapping the card still opens detail for evidence review, due-date edits, and trust-sensitive verification. This preserves the trust model while adding a fast path for obvious tasks.
+
+**Updated:** 2026-03-18
+**Decision:** Move the dashboard visual direction away from warm yellow paper and overly rounded UI toward a lighter paper background, brighter sage accent, and sharper component corners inspired by the `joli` web theme.
+
+**Why:** The warmer, more orangish palette in the Expo app made the dashboard feel softer and more decorative than intended. For beta, Joli should feel calm, clear, and efficient. A whiter paper background improves readability, the brighter sage gives action states more clarity, and tighter radii reduce the generic “bubbly UI kit” effect.
+
 ---
 
 ## Beta Notification Stack

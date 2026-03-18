@@ -88,8 +88,8 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
   - [x] 2.6 Add explicit onboarding error states for invalid credentials, connection failure, and disconnected-account recovery entry points (~1 hr)
   - [x] 2.7 Verify: A beta user can complete onboarding from launch through Klapp connect and reach the post-sync state in both English and German flows (~30 min)
 - [ ] 3.0 Build the dashboard, item detail, and action-management experience with mock data
-  - [ ] 3.1 Create typed mock item fixtures for action, FYI, done, snoozed, and empty-state scenarios (~30 min)
-  - [ ] 3.2 Implement the `Needs your attention` section with correct ordering, due labels, and empty state behavior (~1-2 hrs)
+  - [x] 3.1 Create typed mock item fixtures for action, FYI, done, snoozed, and empty-state scenarios (~30 min)
+  - [x] 3.2 Implement the `Needs your attention` section with correct ordering, due labels, empty state behavior, and inline quick actions for action items (~1-2 hrs)
   - [ ] 3.3 Implement the `Coming up` section with 14-day filtering and hidden-section behavior when no FYI items qualify (~1 hr)
   - [ ] 3.4 Implement the `Taken care of` section with most-recent-first ordering and the 10-item cap (~1 hr)
   - [ ] 3.5 Build tappable item cards that show due label, title, and source line without surfacing full evidence on the card (~1 hr)

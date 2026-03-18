@@ -1,152 +1,134 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import type { DashboardRow } from "@/src/screens/dashboard/dashboard-data";
+import type { MockItem } from "@/src/screens/dashboard/dashboard-data";
 import { usePalette } from "@/src/lib/theme/theme-context";
 
 type DashboardRowProps = {
-  item: DashboardRow;
+  item: MockItem;
 };
 
 export function DashboardRowView({ item }: DashboardRowProps) {
   const router = useRouter();
   const palette = usePalette();
 
-  if (item.kind === "action") {
+  if (item.type === "action" && item.status !== "done") {
     return (
-      <Pressable
-        style={[styles.row, styles.rowDivider, { borderBottomColor: palette.border }]}
-        onPress={() => router.push("/item/preview")}
-      >
-        <Text style={[styles.itemNumber, { color: palette.accent }]}>{item.n}</Text>
-        <View style={styles.itemBody}>
-          <View style={styles.itemTop}>
-            <Text style={[styles.itemTitle, { color: palette.foreground }]}>{item.title}</Text>
-            <Text style={[styles.itemWhen, { color: palette.muted }]}>{item.when}</Text>
-          </View>
-          <Text style={[styles.itemSource, { color: palette.muted }]}>{item.source}</Text>
-          <View style={styles.itemActions}>
-            <Pressable onPress={() => {}}>
-              <Text style={[styles.actionDone, { color: palette.accent }]}>Done</Text>
-            </Pressable>
-            <Text style={[styles.actionSep, { color: palette.muted }]}>·</Text>
-            <Pressable onPress={() => {}}>
-              <Text style={[styles.actionSnooze, { color: palette.muted }]}>Snooze</Text>
-            </Pressable>
-          </View>
+      <View style={[styles.listRow, styles.actionRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
+        <Pressable style={styles.actionBody} onPress={() => router.push("/item/preview")}>
+          <Text style={[styles.actionLabel, { color: palette.accent }]}>{item.dueLabel}</Text>
+          <Text style={[styles.actionTitle, { color: palette.foreground }]}>{item.title}</Text>
+          <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
+        </Pressable>
+
+        <View style={styles.actionFooter}>
+          <Pressable onPress={() => {}}>
+            <Text style={[styles.primaryAction, { color: palette.accent }]}>Done</Text>
+          </Pressable>
+          <Text style={[styles.actionDivider, { color: palette.border }]}>/</Text>
+          <Pressable onPress={() => {}}>
+            <Text style={[styles.secondaryAction, { color: palette.muted }]}>Snooze</Text>
+          </Pressable>
         </View>
-      </Pressable>
+      </View>
     );
   }
 
-  if (item.kind === "upcoming") {
+  if (item.type === "fyi") {
     return (
-      <View style={[styles.row, styles.rowDivider, styles.upcomingRow, { borderBottomColor: palette.border }]}> 
-        <Text style={[styles.upcomingDate, { color: palette.muted }]}>{item.date}</Text>
-        <Text style={[styles.upcomingEvent, { color: palette.foreground }]}>{item.event}</Text>
+      <View style={[styles.listRow, styles.fyiRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
+        <Text style={[styles.secondaryLabel, { color: palette.muted }]}>{item.dueLabel}</Text>
+        <Text style={[styles.listTitle, { color: palette.foreground }]}>{item.title}</Text>
+        <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.row, styles.rowDivider, { borderBottomColor: palette.border }]}> 
+    <View style={[styles.listRow, styles.doneRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
       <Text style={[styles.doneTitle, { color: palette.muted }]}>{item.title}</Text>
-      <View style={styles.doneMeta}>
-        <Text style={[styles.doneSource, { color: palette.muted }]}>{item.source}</Text>
-        <Text style={[styles.doneWhen, { color: palette.muted }]}>{item.when}</Text>
-      </View>
+      <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
+      <Text style={[styles.doneMeta, { color: palette.muted }]}>{item.updatedLabel}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
-    paddingVertical: 16,
-    gap: 6,
+  listRow: {
+    paddingVertical: 18,
+    gap: 4,
+  },
+  actionRow: {
+    gap: 10,
+  },
+  fyiRow: {
+    paddingVertical: 15,
+  },
+  doneRow: {
+    paddingVertical: 14,
+  },
+  actionBody: {
+    gap: 4,
+  },
+  actionFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingTop: 4,
   },
   rowDivider: {
     borderBottomWidth: 1,
   },
-  itemNumber: {
-    fontSize: 11,
-    fontWeight: "500",
-    opacity: 0.5,
-    width: 20,
-    paddingTop: 2,
-  },
-  itemBody: {
-    flex: 1,
-    gap: 5,
-  },
-  itemTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: 12,
-  },
-  itemTitle: {
-    fontSize: 14,
-    lineHeight: 20,
-    flex: 1,
-  },
-  itemWhen: {
-    fontSize: 12,
-    flexShrink: 0,
-  },
-  itemSource: {
+  actionLabel: {
     fontSize: 12,
     lineHeight: 18,
-    opacity: 0.7,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
   },
-  itemActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginTop: 8,
+  secondaryLabel: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: "500",
   },
-  actionDone: {
+  actionTitle: {
+    fontSize: 17,
+    lineHeight: 24,
+    fontWeight: "600",
+    letterSpacing: -0.25,
+  },
+  listTitle: {
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: "500",
+    opacity: 0.9,
+  },
+  metaLine: {
+    fontSize: 12,
+    lineHeight: 18,
+    opacity: 0.72,
+  },
+  primaryAction: {
     fontSize: 13,
+    lineHeight: 18,
+    fontWeight: "700",
+  },
+  secondaryAction: {
+    fontSize: 13,
+    lineHeight: 18,
     fontWeight: "600",
   },
-  actionSep: {
+  actionDivider: {
     fontSize: 13,
-    opacity: 0.4,
-  },
-  actionSnooze: {
-    fontSize: 13,
-  },
-  upcomingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-  },
-  upcomingDate: {
-    fontSize: 12,
-    width: 76,
-    opacity: 0.6,
-  },
-  upcomingEvent: {
-    fontSize: 14,
-    lineHeight: 20,
-    flex: 1,
-    opacity: 0.75,
+    lineHeight: 18,
   },
   doneTitle: {
     fontSize: 14,
     lineHeight: 20,
-    textDecorationLine: "line-through",
-    opacity: 0.5,
+    fontWeight: "500",
+    opacity: 0.56,
   },
   doneMeta: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  doneSource: {
     fontSize: 12,
-    opacity: 0.4,
-  },
-  doneWhen: {
-    fontSize: 12,
-    opacity: 0.4,
+    opacity: 0.45,
   },
 });
