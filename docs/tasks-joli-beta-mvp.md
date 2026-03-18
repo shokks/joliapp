@@ -100,7 +100,7 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
   - [x] 3.11 Refine the item detail action area so snooze and due-date presets are revealed on tap instead of always visible (~30 min)
   - [x] 3.9 Verify: The dashboard and detail flows work correctly on device for action, FYI, done, snoozed, and empty states with mock data (~30 min)
 - [ ] 4.0 Implement Klapp sync, extraction pipeline, and item persistence
-  - [ ] 4.1 Define the core TypeScript models for user session, Klapp messages, extracted items, and sync status from the spec (~30 min)
+  - [x] 4.1 Define the core TypeScript models for user session, Klapp messages, extracted items, and sync status from the spec (~30 min)
   - [ ] 4.2 Implement the Klapp authentication client contract using `POST /v2/authenticate` and the required request headers (~1-2 hrs)
   - [ ] 4.3 Implement message list and message detail fetchers using the Klapp endpoints from the spec (~1-2 hrs)
   - [ ] 4.4 Add sync orchestration that tracks `lastSyncAt`, fetches only new messages, and handles initial sync separately from incremental syncs (~1-2 hrs)

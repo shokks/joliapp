@@ -98,6 +98,9 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 ## Technical Considerations
 
 - Use the existing Expo app as the native beta client surface.
+- Use Convex as the beta backend for persistence, sync orchestration, and scheduled Klapp polling, with data hosted in the EU region.
+- Use Clerk for Joli account authentication and returning-session handling.
+- Use Anthropic as the extraction LLM provider for message-plus-PDF item extraction.
 - The beta should prioritize the happy path and avoid over-engineered abstractions, following the MVP lesson from `~/.factory/lessons.md`.
 - The PRD keeps a strong why-first framing based on the goal clarity lesson from `~/.factory/lessons.md`.
 - Secure token storage is required because Klapp refresh tokens are sensitive credentials.
@@ -115,7 +118,6 @@ The expected value in beta is simple: a parent connects Klapp once, sees the imp
 
 ## Open Questions
 
-- Which backend stack will own user accounts, encrypted token storage, sync scheduling, and extraction orchestration?
 - What exact highlighting treatment should be used in the detail view when the evidence snippet spans multiple non-contiguous parts of the message?
 - How should the app behave when first sync succeeds technically but produces zero items?
 - What reconnect UX should be shown when Klapp authentication expires or fails with `401`?
