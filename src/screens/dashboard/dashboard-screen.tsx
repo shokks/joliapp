@@ -18,6 +18,7 @@ export function DashboardScreen() {
   const scrollY = useRef(new Animated.Value(0)).current;
   const today = "2026-03-18";
   const comingUpWindowInDays = 14;
+  const takenCareOfLimit = 10;
 
   const sortedActionItems = useMemo(
     () => [...mockActionItems].sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
@@ -42,15 +43,23 @@ export function DashboardScreen() {
     [today],
   );
 
+  const recentDoneItems = useMemo(
+    () =>
+      [...mockDoneItems]
+        .sort((left, right) => (right.date ?? "").localeCompare(left.date ?? ""))
+        .slice(0, takenCareOfLimit),
+    [],
+  );
+
   const dashboardSections = useMemo(
     () => [
       { key: "attention", title: "Needs your attention", data: sortedActionItems },
       ...(upcomingItemsWithinWindow.length > 0
         ? [{ key: "upcoming", title: "Coming up", data: upcomingItemsWithinWindow }]
         : []),
-      { key: "done", title: "Taken care of", data: mockDoneItems },
+      { key: "done", title: "Taken care of", data: recentDoneItems },
     ],
-    [sortedActionItems, upcomingItemsWithinWindow],
+    [recentDoneItems, sortedActionItems, upcomingItemsWithinWindow],
   ) satisfies Array<{ key: string; title: string; data: readonly MockItem[] }>;
 
   const heroOpacity = scrollY.interpolate({
