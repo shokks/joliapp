@@ -87,7 +87,7 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
   - [x] 2.5 Create the first-sync loading experience that blocks forward progress until sync completes, fails, or returns zero items (~1 hr)
   - [x] 2.6 Add explicit onboarding error states for invalid credentials, connection failure, and disconnected-account recovery entry points (~1 hr)
   - [x] 2.7 Verify: A beta user can complete onboarding from launch through Klapp connect and reach the post-sync state in both English and German flows (~30 min)
-- [ ] 3.0 Build the dashboard, item detail, and action-management experience with mock data
+- [x] 3.0 Build the dashboard, item detail, and action-management experience with mock data
   - [x] 3.1 Create typed mock item fixtures for action, FYI, done, snoozed, and empty-state scenarios (~30 min)
   - [x] 3.2 Implement the `Needs your attention` section with correct ordering, due labels, empty state behavior, and inline quick actions for action items (~1-2 hrs)
   - [x] 3.3 Implement the `Coming up` section with 14-day filtering and hidden-section behavior when no FYI items qualify (~1 hr)
@@ -98,7 +98,7 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
   - [x] 3.8 Add settings placeholders for language override, connection state, and future beta preferences (~30 min)
   - [x] 3.10 Refine the `Coming up` section with the approved date-rail treatment and optional child badge metadata/UI (~30 min)
   - [x] 3.11 Refine the item detail action area so snooze and due-date presets are revealed on tap instead of always visible (~30 min)
-  - [ ] 3.9 Verify: The dashboard and detail flows work correctly on device for action, FYI, done, snoozed, and empty states with mock data (~30 min)
+  - [x] 3.9 Verify: The dashboard and detail flows work correctly on device for action, FYI, done, snoozed, and empty states with mock data (~30 min)
 - [ ] 4.0 Implement Klapp sync, extraction pipeline, and item persistence
   - [ ] 4.1 Define the core TypeScript models for user session, Klapp messages, extracted items, and sync status from the spec (~30 min)
   - [ ] 4.2 Implement the Klapp authentication client contract using `POST /v2/authenticate` and the required request headers (~1-2 hrs)
