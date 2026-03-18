@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { HeroBlock } from "@/src/components/layout/hero-block";
 import { ChipButton } from "@/src/components/ui/chip-button";
 import { Screen } from "@/src/components/ui/screen";
+import { useAppContext } from "@/src/lib/state/app-context";
 
 export function WelcomeScreen() {
   const router = useRouter();
+  const { translation } = useAppContext();
 
   return (
     <Screen scroll={false}>
@@ -14,14 +16,14 @@ export function WelcomeScreen() {
 
         <View style={styles.contentBlock}>
           <HeroBlock
-            dayLabel="Joli beta"
-            title="Welcome to Joli."
-            subtitle="A calmer way to stay on top of family admin."
+            dayLabel={translation.welcome.dayLabel}
+            title={translation.welcome.title}
+            subtitle={translation.welcome.subtitle}
             body=""
           />
 
           <View style={styles.ctaWrap}>
-            <ChipButton onPress={() => router.push("/joli-login")}>Continue</ChipButton>
+            <ChipButton onPress={() => router.push("/joli-login")}>{translation.welcome.cta}</ChipButton>
           </View>
         </View>
 
