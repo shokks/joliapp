@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { StyleSheet, View } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { HeroBlock } from "@/src/components/layout/hero-block";
 import { Screen } from "@/src/components/ui/screen";
 import { OnboardingProgress } from "@/src/components/onboarding/onboarding-progress";
@@ -19,13 +19,11 @@ export function OnboardingStepLayout({
   contentStyle,
 }: OnboardingStepLayoutProps) {
   return (
-    <Screen
-      scroll
-      keyboardShouldPersistTaps="handled"
-      automaticallyAdjustKeyboardInsets
-      contentContainerStyle={styles.screenBody}
-    >
-      <View style={styles.layoutRoot}>
+    <Screen scroll keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screenBody}>
+      <KeyboardAvoidingView
+        style={styles.layoutRoot}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <View style={styles.topSpacer} />
 
         <View style={styles.contentBlock}>
@@ -41,7 +39,7 @@ export function OnboardingStepLayout({
         </View>
 
         <View style={styles.bottomSpacer} />
-      </View>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
