@@ -24,6 +24,33 @@ Web (Next.js) handles the landing page, waitlist, and dashboard mockup. The real
 
 ---
 
+## Backend Stack
+
+**Date:** 2026-03-18
+**Decision:** Use Convex as the beta backend and persistence layer, with data hosted in the EU region.
+
+**Why:** Task 4 needs one simple system to own item persistence, encrypted Klapp-token handling, sync orchestration, and scheduled background work. Convex fits the MVP bias here: strongly typed backend functions, storage and query model in one place, and a straightforward path for periodic sync logic without adding unnecessary backend surface area. EU hosting keeps the initial data footprint aligned with the product's European school/family context.
+
+---
+
+## App Authentication
+
+**Date:** 2026-03-18
+**Decision:** Use Clerk for Joli account authentication.
+
+**Why:** Clerk gives the beta a fast, reliable auth layer for email-based sign-up and returning-session handling without forcing us to build auth primitives inside the sync backend. That keeps responsibilities clean: Clerk owns parent identity, Convex owns app data, and Klapp credentials stay scoped to the sync/persistence layer.
+
+---
+
+## Extraction LLM
+
+**Date:** 2026-03-18
+**Decision:** Use Anthropic as the beta extraction LLM provider.
+
+**Why:** The extraction pipeline needs strong German comprehension, structured output discipline, and first-class PDF handling for Klapp attachments. Anthropic fits that beta need well and matches the current product assumption that message body plus PDF content can be processed together in one extraction request.
+
+---
+
 ## Mobile Widget
 
 **Date:** 2026-03-17
@@ -57,6 +84,26 @@ Web (Next.js) handles the landing page, waitlist, and dashboard mockup. The real
 **Decision:** Joli never shows a message feed. It surfaces tasks extracted from messages.
 
 **Why:** The ICP is time-poor and already drowning in email. Showing another inbox or feed means they stop opening it within a week. The only thing that earns daily opens is: here are the 2 things you need to do today. Learned from ParentBox which validated this as the core insight.
+
+**Updated:** 2026-03-18
+**Decision:** After Clerk sign-up, the first signed-in surface should be a setup/sync state framed as `Firehose`, not the real dashboard and not a general-purpose message feed.
+
+**Why:** Asking for Klapp credentials immediately inside onboarding is too abrupt for the trust level Joli has earned at that point. A signed-in setup surface creates a better trust ladder: first identity with Joli, then provider connection, then proof that message access works, then AI value. `Firehose` captures the right long-term model: everything flows into one organizing layer, with Klapp as the first channel rather than the permanent only source. This keeps the product task-first while still acknowledging that Joli is managing a broader inbound stream in the background.
+
+**Updated:** 2026-03-18
+**Decision:** Treat successful Klapp connection as requiring a successful message-detail fetch, not just a token exchange.
+
+**Why:** A token by itself does not prove that Joli can actually do the job. For beta, the real proof point is: Joli can authenticate, fetch the message list, and retrieve full message detail. That gives us a reliable pre-LLM verification gate and a testable raw-sync milestone before prompt quality enters the picture.
+
+**Updated:** 2026-03-18
+**Decision:** If raw sync succeeds but extraction fails, Joli should retry extraction silently first before escalating the issue to the user.
+
+**Why:** Parents should not be exposed to transient AI processing failures unless they become persistent or block value. The first responsibility of the product is to manage the inbox quietly on their behalf. Silent retry preserves that calmness while still allowing us to keep raw sync and extraction state separate internally.
+
+**Updated:** 2026-03-18
+**Decision:** The move to `Firehose` is a frontend-flow adjustment built on top of the existing Task 1-3 work, not a wholesale backend restart.
+
+**Why:** Joli already has the navigation shell, localization, settings, dashboard hierarchy, item detail trust surface, and mock task interactions in place. The product change now is about inserting the right post-signup organizing/sync surface and separating raw sync verification from extraction before the real dashboard becomes live. That means we should preserve as much of the shipped frontend as possible and adjust the surfaces around it instead of treating the work so far as disposable.
 
 ---
 
@@ -169,3 +216,8 @@ Web (Next.js) handles the landing page, waitlist, and dashboard mockup. The real
 **Decision:** Start with a single extraction prompt. Refactor to Router → Skill Module → Executor when adding a second domain.
 
 **Why:** Clara V1 had to do a full reset because a monolithic policy prompt became unstable as domains were added. The right architecture is modular — but premature modularity is its own form of over-engineering. One prompt for one domain is fine for beta. The refactor trigger is: adding a second domain (e.g. health or social comms).
+
+**Updated:** 2026-03-18
+**Decision:** For beta prompt iteration, optimize for balanced precision and recall rather than an extreme precision-only posture.
+
+**Why:** Joli still needs to feel trustworthy, but it also has to prove that it catches a meaningful share of the important family admin work. If beta is too conservative, parents may see too little value; if it over-extracts, trust drops. Balanced precision and recall is the right evaluation target, with ParentBox learnings adapted to Joli's narrower, calmer scope.

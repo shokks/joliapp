@@ -1,13 +1,14 @@
 # Joli — Product Spec
 
-**Version:** 0.2
-**Date:** 2026-03-17
+**Version:** 0.3
+**Date:** 2026-03-18
 **Status:** Beta scope
 
 ---
 
 ## Changelog
 
+- **v0.3** — Split onboarding from Klapp connection, added post-signup setup/sync surface, clarified raw message verification before extraction, documented Anthropic explicitly
 - **v0.2** — Simplified task model (one date field, type instead of categories), dropped French for beta, device locale replaces language onboarding step, removed Dismiss action, Coming up redefined as FYI items, RSVP splits into action + FYI pair
 - **v0.1** — Initial spec
 
@@ -19,21 +20,32 @@ Working parents carry a second full-time job in their heads — school forms, pe
 
 **User:** The default parent in a household — the one who ends up being the family's operating system. Time-poor, attention-scarce, already overwhelmed by notification volume.
 
+## 1.1 Runtime Stack
+
+- **Mobile client:** Expo / React Native
+- **User auth:** Clerk
+- **Backend + persistence:** Convex
+- **Extraction LLM:** Anthropic
+- **Data residency target:** EU region for beta user data
+
 ---
 
 ## 2. Core Flow (Happy Path)
 
 ```
-1. Parent connects Klapp account (email + password → refresh token)
-2. Joli syncs messages periodically (every 30 min)
-3. Each new message is passed through the extraction pipeline
-4. LLM extracts zero or more items (action or fyi) from the message
-5. Action items appear under "Needs your attention", FYI items under "Coming up"
-6. Parent receives a native push notification for new action items only
-7. Parent opens app, sees task card, and either acts from the dashboard or taps for detail
-8. Detail view shows full Klapp message with the extracted sentence highlighted when more context is needed
-9. Parent marks action item done / snoozes it from the dashboard or detail view
-10. Done items move to "Taken care of"
+1. Parent creates a Joli account with Clerk
+2. Parent lands in a signed-in setup surface where Joli asks to connect Klapp
+3. Parent connects Klapp account (email + password → refresh token)
+4. Joli verifies the connection by fetching raw Klapp messages before any LLM processing happens
+5. Joli syncs raw messages and attachments into Convex
+6. Only after raw message access is confirmed are synced messages passed to the extraction pipeline
+7. Anthropic extracts zero or more items (action or fyi) from each relevant message
+8. Action items appear under "Needs your attention", FYI items under "Coming up"
+9. Parent receives a native push notification for new action items only
+10. Parent opens app, sees task card, and either acts from the dashboard or taps for detail
+11. Detail view shows full Klapp message with the extracted sentence highlighted when more context is needed
+12. Parent marks action item done / snoozes it from the dashboard or detail view
+13. Done items move to "Taken care of"
 ```
 
 This is the only flow that needs to work for beta.
@@ -53,6 +65,8 @@ Returns: { refresh_token }
 ```
 Store `refresh_token` encrypted at rest. Never store the raw password after token exchange.
 
+Klapp authentication happens after the user is already authenticated with Clerk. Joli account auth and Klapp provider auth are separate steps.
+
 Required headers for all subsequent calls:
 ```
 Authorization: Bearer <refresh_token>
@@ -69,13 +83,26 @@ GET  /v4/messages/{messageId}/parent            → full message detail
 
 Message body lives in `replies[0].body`. Attachments in `replies[0].files[]` with `file_name` and `file_draft_id`.
 
+### Connection Verification
+
+Joli must treat "Klapp connected" as more than a successful token exchange.
+
+The happy-path verification sequence is:
+1. Klapp auth succeeds and a refresh token is received
+2. Joli successfully fetches the message list
+3. Joli successfully fetches at least one full message detail when messages exist
+4. Only then is the connection considered verified and ready for extraction
+
+If token exchange succeeds but message fetch fails, the user should stay in the setup/sync surface and see a connection problem state rather than being dropped into the real dashboard.
+
 ### Sync Schedule
 - Poll every 30 minutes via scheduled job
 - Track `lastSyncAt` per user; only fetch messages with `sentAt > lastSyncAt`
 - On 401: flag account as disconnected, notify user to reconnect
+- Keep raw sync status separate from extraction status so Joli can distinguish "Klapp access works" from "AI extraction failed"
 
 ### Attachments
-Download PDF attachments and include them in the extraction call via Claude's native PDF support. Base64-encode the file and attach as a `document` content block alongside the message body — Claude reads both in a single call. Skip non-PDF attachments for beta.
+Download PDF attachments and include them in the extraction call via Anthropic's native PDF support. Base64-encode the file and attach as a `document` content block alongside the message body so message text and PDF content are processed in one request. Skip non-PDF attachments for beta.
 
 ---
 
@@ -104,6 +131,10 @@ type Item = {
 ## 5. Extraction Rules
 
 The LLM receives the full message body (German) + any PDF attachments and outputs items in the user's preferred language.
+
+Extraction only runs after raw Klapp sync has succeeded. Joli should never rely on extraction success to prove that Klapp connection works.
+
+For beta, Joli should optimize for precision over recall: it is better to miss a borderline task than to show a parent an incorrect one.
 
 **Extract an `action` item when:**
 - There is a clear action the parent must take (sign, pay, reply, bring, book)
@@ -137,6 +168,17 @@ When a message contains an RSVP deadline AND an event date, extract both:
 - Evidence snippet always in original German regardless of output language
 - One message can produce zero or multiple items
 - Titles must be specific — "Sign permission slip — Science Museum trip" not "Sign form"
+- Start with a single Anthropic extraction prompt for beta and iterate against a curated set of real-world examples and failure cases learned from ParentBox, adapted to Joli's narrower task-first scope
+
+## 5.1 Extraction Stages
+
+Joli should treat sync and extraction as separate stages:
+
+1. **Raw sync stage** — authenticate with Klapp, fetch messages, fetch message detail, fetch supported attachments
+2. **Extraction stage** — send the synced message body and supported PDF content to Anthropic
+3. **Normalization stage** — validate the model output against Joli's `action` / `fyi` rules before items are created
+
+This separation is important for beta testing because it allows us to verify Klapp connectivity and raw message access before prompt quality is evaluated.
 
 ---
 
@@ -202,11 +244,25 @@ Tap card → Item Detail.
 ## 8. Onboarding Flow
 
 1. Sign up with email
-2. Connect Klapp account (email + password)
-3. Joli runs first sync immediately (blocking — user waits with progress indicator)
-4. First items appear → land on dashboard
+2. Land in a signed-in setup surface that explains that Joli needs Klapp access before it can help
+3. Connect Klapp account from that surface (email + password)
+4. Joli verifies raw message access and runs first raw sync
+5. Joli shows setup/sync progress while messages are being checked and processed
+6. Once extraction completes, Joli transitions the user into the real task dashboard
 
 Language is detected from device locale (EN → English, DE → German). User can override in settings.
+
+## 8.1 Setup Surface
+
+The first signed-in screen after Clerk auth is not the real dashboard. It is a setup/sync surface where Joli manages the connection and early sync process for the user.
+
+This surface should:
+- explain why Klapp connection is needed
+- let the user connect or reconnect Klapp
+- show that Joli can access and sync messages
+- show progress while Joli is processing synced messages
+
+This surface may reference the user's school inbox conceptually, but it should not become a general-purpose message feed. The permanent product remains task-first, not inbox-first.
 
 ---
 
