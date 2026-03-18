@@ -90,7 +90,7 @@ For this feature, build the mobile UI and flows with mock or fixture data first,
 - [ ] 3.0 Build the dashboard, item detail, and action-management experience with mock data
   - [x] 3.1 Create typed mock item fixtures for action, FYI, done, snoozed, and empty-state scenarios (~30 min)
   - [x] 3.2 Implement the `Needs your attention` section with correct ordering, due labels, empty state behavior, and inline quick actions for action items (~1-2 hrs)
-  - [ ] 3.3 Implement the `Coming up` section with 14-day filtering and hidden-section behavior when no FYI items qualify (~1 hr)
+  - [x] 3.3 Implement the `Coming up` section with 14-day filtering and hidden-section behavior when no FYI items qualify (~1 hr)
   - [ ] 3.4 Implement the `Taken care of` section with most-recent-first ordering and the 10-item cap (~1 hr)
   - [ ] 3.5 Build tappable item cards that show due label, title, and source line without surfacing full evidence on the card (~1 hr)
   - [ ] 3.6 Build the item detail screen with title, date, full source message, highlighted evidence snippet, and edit controls for action items (~1-2 hrs)

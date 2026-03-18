@@ -16,17 +16,42 @@ import { DashboardSectionHeader } from "@/src/screens/dashboard/components/dashb
 export function DashboardScreen() {
   const palette = usePalette();
   const scrollY = useRef(new Animated.Value(0)).current;
+  const today = "2026-03-18";
+  const comingUpWindowInDays = 14;
 
   const sortedActionItems = useMemo(
     () => [...mockActionItems].sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
     [],
   );
 
-  const dashboardSections: Array<{ key: string; title: string; data: readonly MockItem[] }> = [
-    { key: "attention", title: "Needs your attention", data: sortedActionItems },
-    { key: "upcoming", title: "Coming up", data: mockUpcomingItems },
-    { key: "done", title: "Taken care of", data: mockDoneItems },
-  ];
+  const upcomingItemsWithinWindow = useMemo(
+    () =>
+      [...mockUpcomingItems]
+        .filter((item) => {
+          if (!item.date) {
+            return false;
+          }
+
+          const dayOffset = Math.floor(
+            (new Date(`${item.date}T00:00:00Z`).getTime() - new Date(`${today}T00:00:00Z`).getTime()) / (1000 * 60 * 60 * 24),
+          );
+
+          return dayOffset >= 0 && dayOffset <= comingUpWindowInDays;
+        })
+        .sort((left, right) => (left.date ?? "9999").localeCompare(right.date ?? "9999")),
+    [today],
+  );
+
+  const dashboardSections = useMemo(
+    () => [
+      { key: "attention", title: "Needs your attention", data: sortedActionItems },
+      ...(upcomingItemsWithinWindow.length > 0
+        ? [{ key: "upcoming", title: "Coming up", data: upcomingItemsWithinWindow }]
+        : []),
+      { key: "done", title: "Taken care of", data: mockDoneItems },
+    ],
+    [sortedActionItems, upcomingItemsWithinWindow],
+  ) satisfies Array<{ key: string; title: string; data: readonly MockItem[] }>;
 
   const heroOpacity = scrollY.interpolate({
     inputRange: [0, 90],
