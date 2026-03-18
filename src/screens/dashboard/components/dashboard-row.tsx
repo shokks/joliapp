@@ -10,11 +10,12 @@ type DashboardRowProps = {
 export function DashboardRowView({ item }: DashboardRowProps) {
   const router = useRouter();
   const palette = usePalette();
+  const openItemPreview = () => router.push("/item/preview");
 
   if (item.type === "action" && item.status !== "done") {
     return (
       <View style={[styles.listRow, styles.actionRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
-        <Pressable style={styles.actionBody} onPress={() => router.push("/item/preview")}>
+        <Pressable style={styles.actionBody} onPress={openItemPreview}>
           <Text style={[styles.actionLabel, { color: palette.accent }]}>{item.dueLabel}</Text>
           <Text style={[styles.actionTitle, { color: palette.foreground }]}>{item.title}</Text>
           <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
@@ -35,20 +36,26 @@ export function DashboardRowView({ item }: DashboardRowProps) {
 
   if (item.type === "fyi") {
     return (
-      <View style={[styles.listRow, styles.fyiRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
+      <Pressable
+        style={[styles.listRow, styles.fyiRow, styles.rowDivider, { borderBottomColor: palette.border }]}
+        onPress={openItemPreview}
+      >
         <Text style={[styles.secondaryLabel, { color: palette.muted }]}>{item.dueLabel}</Text>
         <Text style={[styles.listTitle, { color: palette.foreground }]}>{item.title}</Text>
         <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
-      </View>
+      </Pressable>
     );
   }
 
   return (
-    <View style={[styles.listRow, styles.doneRow, styles.rowDivider, { borderBottomColor: palette.border }]}> 
+    <Pressable
+      style={[styles.listRow, styles.doneRow, styles.rowDivider, { borderBottomColor: palette.border }]}
+      onPress={openItemPreview}
+    >
       <Text style={[styles.doneTitle, { color: palette.muted }]}>{item.title}</Text>
       <Text style={[styles.metaLine, { color: palette.muted }]}>{item.source}</Text>
       <Text style={[styles.doneMeta, { color: palette.muted }]}>{item.updatedLabel}</Text>
-    </View>
+    </Pressable>
   );
 }
 
