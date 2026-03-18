@@ -3,17 +3,27 @@ import { Pressable, StyleSheet, Text, type PressableProps, type ViewStyle } from
 import { palette } from "@/src/lib/theme/palette";
 
 type ChipButtonProps = PropsWithChildren<Omit<PressableProps, "style"> & {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "ghost";
   style?: ViewStyle;
 }>;
 
 export function ChipButton({ children, variant = "primary", style, ...props }: ChipButtonProps) {
+  const isPrimary = variant === "primary";
+
   return (
     <Pressable
-      style={[styles.base, variant === "primary" ? styles.primary : styles.secondary, style]}
+      style={[
+        styles.base,
+        isPrimary ? styles.primary : variant === "secondary" ? styles.secondary : styles.ghost,
+        style,
+      ]}
       {...props}
     >
-      <Text style={variant === "primary" ? styles.primaryText : styles.secondaryText}>
+      <Text
+        style={
+          isPrimary ? styles.primaryText : variant === "secondary" ? styles.secondaryText : styles.ghostText
+        }
+      >
         {children}
       </Text>
     </Pressable>
@@ -23,8 +33,10 @@ export function ChipButton({ children, variant = "primary", style, ...props }: C
 const styles = StyleSheet.create({
   base: {
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
   },
   primary: {
     backgroundColor: palette.accent,
@@ -34,14 +46,26 @@ const styles = StyleSheet.create({
     borderColor: palette.border,
     borderWidth: 1,
   },
+  ghost: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    borderRadius: 0,
+    paddingHorizontal: 0,
+    alignItems: "flex-start",
+  },
   primaryText: {
     color: palette.accentText,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "700",
   },
   secondaryText: {
     color: palette.foreground,
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  ghostText: {
+    color: palette.foreground,
+    fontSize: 14,
     fontWeight: "600",
   },
 });

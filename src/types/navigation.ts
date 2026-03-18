@@ -1,5 +1,6 @@
 export type AppRoute =
   | "/welcome"
+  | "/joli-login"
   | "/connect-klapp"
   | "/first-sync"
   | "/dashboard"

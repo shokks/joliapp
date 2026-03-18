@@ -5,7 +5,7 @@ import { ChipButton } from "@/src/components/ui/chip-button";
 import { Screen } from "@/src/components/ui/screen";
 import { palette } from "@/src/lib/theme/palette";
 
-export function ConnectKlappScreen() {
+export function JoliLoginScreen() {
   const router = useRouter();
 
   return (
@@ -18,14 +18,14 @@ export function ConnectKlappScreen() {
 
         <View style={styles.contentBlock}>
           <HeroBlock
-            dayLabel="Step 2"
-            title="Connect Klapp."
-            subtitle="Use your Klapp login."
+            dayLabel="Step 1"
+            title="Sign in to Joli."
+            subtitle="Create your Joli login."
             body=""
             progress={
               <View style={styles.progressRail}>
                 <View style={[styles.progressStep, styles.progressStepActive]} />
-                <View style={[styles.progressStep, styles.progressStepActive]} />
+                <View style={styles.progressStep} />
                 <View style={styles.progressStep} />
               </View>
             }
@@ -34,9 +34,8 @@ export function ConnectKlappScreen() {
           <View style={styles.formBlock}>
             <View style={styles.fieldGroup}>
               <TextInput
-                autoCapitalize="none"
-                keyboardType="email-address"
-                placeholder="parent@example.com"
+                autoCapitalize="words"
+                placeholder="Your name"
                 placeholderTextColor={palette.muted}
                 style={styles.input}
               />
@@ -44,19 +43,28 @@ export function ConnectKlappScreen() {
 
             <View style={styles.fieldGroup}>
               <TextInput
-                placeholder="Your Klapp password (not stored)"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                placeholder="you@example.com"
+                placeholderTextColor={palette.muted}
+                style={styles.input}
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <TextInput
+                placeholder="Create a password"
                 placeholderTextColor={palette.muted}
                 secureTextEntry
                 style={styles.input}
               />
             </View>
-
             <View style={styles.actions}>
               <ChipButton variant="ghost" onPress={() => router.back()}>
                 Back
               </ChipButton>
-              <ChipButton style={styles.primaryAction} onPress={() => router.push("/first-sync")}>
-                Connect Klapp
+              <ChipButton style={styles.primaryAction} onPress={() => router.push("/connect-klapp")}>
+                Continue
               </ChipButton>
             </View>
           </View>
